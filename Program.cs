@@ -61,7 +61,6 @@ public class CommandHandler
             if (Message == null || Message.Author.IsBot)
                 return;
             int argPos = 0;
-            // Change ur prefix here
             if (!(Message.HasCharPrefix('?', ref argPos) || Message.HasMentionPrefix(Client.CurrentUser, ref argPos)))
                 return;
             CommandContext context = new CommandContext(Client, Message);
@@ -91,6 +90,7 @@ public class Commands : ModuleBase
         var helpMessage = "### List of available commands:\n\n" +
                           "### Practical Commands: \n" +
                           "`?help` - Displays this command.\n" +
+                          "`?source` - Links to the bots source code. \n" +
                           "`?credits` - Displays bot's credit.\n" +
                           "`?test` - Simple test command you say test bot will response.\n" +
                           "`?invite` - Send a link to invite this bot to your server! \n" +
@@ -516,6 +516,13 @@ public class Commands : ModuleBase
         await ReplyAsync(
             "# Changelog: \n ### API UPDATE 0.0.2 \n Added a some new commands based on some cool APIs i found! \n + 16 New commands!!");
     }
+    // Simple source command that leads to this project source
+    [Command("source")]
+    public async Task source()
+    {
+        await ReplyAsync("If you want to contribute or check out the source code you can do it here: https://codeberg.org/Purplebored/Chrobry");
+    }
+    // End of the misc commands
 
     // Calculate command
     [Command("calculate")]
