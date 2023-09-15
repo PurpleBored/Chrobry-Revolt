@@ -1,9 +1,8 @@
-
-
 # Chrobry
+
 A king among revolt bots 👑
 
-![Chrobry(1).png](Assets\Chrobry(1).png)
+![Chrobry(1).png](Assets/Chrobry(1).png)
 
 ## Features
 
@@ -29,10 +28,6 @@ A king among revolt bots 👑
 
 This project is licensed under the terms of the GPL 3.0 license.
 
-
-
 ## Contributing
 
 Contributions to this project are welcome! Simply fork the repository and create a pull request with your proposed changes. preferably also create a issue on codeberg first.
-
-
