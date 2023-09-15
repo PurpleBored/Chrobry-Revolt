@@ -128,7 +128,7 @@ public class Commands : ModuleBase
     [Command("nsfw-help")]
     public async Task nsfwhelp()
     {
-        await ReplyAsync("### Here are all the available NSFW commands: \n `?r34 {search}` - Searches rule34.xxx \n  ");
+        await ReplyAsync("### Here are all the available NSFW commands: \n `?r34 {search}` - Searches rule34.xxx \n `?hentai` - Grabs a random hentai image \n ");
     }
     // End of the help command Section
     
@@ -514,7 +514,7 @@ public class Commands : ModuleBase
     public async Task changelog()
     {
         await ReplyAsync(
-            "# Changelog: \n ### API UPDATE 0.0.2 \n Added a some new commands based on some cool APIs i found! \n + 16 New commands!!");
+            "# Changelog: \n ### API UPDATE 0.0.3 \n The bot is now open source! \n 2 new nsfw commands! (?nsfw-help)");
     }
     // Simple source command that leads to this project source
     [Command("source")]
@@ -680,4 +680,35 @@ public class Commands : ModuleBase
             }
         }
     }
+    // Hentai command.
+    [Command("hentai")]
+    public async Task hentai()
+    {
+                if (!(Context.Channel is TextChannel textChannel) || !textChannel.IsNsfw)
+        {
+            await Context.Channel.SendMessageAsync(
+                "This command is only allowed in NSFW channels. So go to a NSFW channel to get your NSFW smh");
+            return;
+        }
+        using (HttpClient client = new HttpClient())
+    {
+        string apiUrl = "https://nekobot.xyz/api/image?type=hneko";
+        HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string nekoJson = await response.Content.ReadAsStringAsync();
+            dynamic nekoObject = Newtonsoft.Json.JsonConvert.DeserializeObject(nekoJson);
+
+            string imageUrl = nekoObject["message"];
+
+            await ReplyAsync(imageUrl);
+        }
+        else
+        {
+            await ReplyAsync("Sorry, I couldn't fetch a neko image at the moment. Please try again later.");
+        }
+    }
+    }
+
 }
