@@ -113,6 +113,7 @@ public class Commands : ModuleBase
                           "`?shitpost` - Sends a random shitpost. \n " +
                           "`?cat` - Cat :3 \n " +
                           "`?neko` - Neko command \n " +
+                          "`?advice` - Gives the user a life Advice \n " +
                           "`?quote` - Gives a random quote using yet another API. \n ";
         await ReplyAsync(helpMessage);
     }
@@ -234,7 +235,7 @@ public class Commands : ModuleBase
         await ReplyAsync($"You rolled a {result}!");
     }
 
-    // Very simple very fun say command.
+    // Very simple very  say command.
         private List<string> blacklist = new List<string>
     {
         "nigga", "nigger", "n i g g a", "fuck", "shit", "piss", "cunt", "dick", "fag", "faggot", "kys", "ky$", // Blacklist for the say command
@@ -276,9 +277,39 @@ public class Commands : ModuleBase
         await ReplyAsync($"It's {side}!");
     }
     // End of the Fun commands.
+    // Api commands
+    
+    // Advice command.
+    [Command("advice")]
+    public async Task Advice()
+    {
+        using (HttpClient client = new HttpClient())
+        {
+            string apiUrl = "https://api.adviceslip.com/advice";
+            HttpResponseMessage response = await client.GetAsync(apiUrl);
 
-    // Api Commands (Commands which use some API (EXPECT NSFW COMMANDS!)):
-    // Dog fact command very simple very fun
+            if (response.IsSuccessStatusCode)
+            {
+                string adviceJson = await response.Content.ReadAsStringAsync();
+                JObject adviceObject = JObject.Parse(adviceJson);
+
+                string advice = adviceObject["slip"]["advice"]?.ToString();
+
+                if (!string.IsNullOrEmpty(advice))
+                {
+                    await ReplyAsync($"Advice: {advice}");
+                }
+                else
+                {
+                    await ReplyAsync("Sorry, I couldn't fetch advice at the moment. Please try again later.");
+                }
+            }
+            else
+            {
+                await ReplyAsync("Sorry, I couldn't fetch advice at the moment. Please try again later.");
+            }
+        }
+    }    // Dog fact command very simple very fun
     [Command("dogfact")]
     public async Task DogFact()
     {
