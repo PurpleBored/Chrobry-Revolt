@@ -24,7 +24,7 @@ class Program
         });
 
         await Client.StartAsync();
-        await Client.CurrentUser.ModifySelfAsync(statusText: new Option<string>("Rewrite in Progress"));
+        await Client.CurrentUser.ModifySelfAsync(statusText: new Option<string>("Now Open source! `?source`"));
         await Client.CurrentUser.ModifySelfAsync(statusType: new Option<UserStatusType>(UserStatusType.Focus));
         CommandHandler CommandHandler = new CommandHandler(Client);
         CommandHandler.LoadCommands();
@@ -108,10 +108,11 @@ public class Commands : ModuleBase
                           "`?catfact` - Gives a random Catfact using cat fact API (Currently somewhat bugged with the []. \n" +
                           "`?joke` - Very simple command just gives a joke using the Joke API. \n " +
                           "`?flipcoin` - a Command so easy a child could do it. \n " +
-                          "`?factBUT` - Gives a random useless fact. \n " +
+                          "`?fact` - Gives a random useless fact. \n " +
                           "`?urban + {word}` - uses the urban dictionary the search for the word. \n" +
                           "`?shitpost` - Sends a random shitpost. \n " +
                           "`?cat` - Cat :3 \n " +
+                          "`?neko` - Neko command \n " +
                           "`?quote` - Gives a random quote using yet another API. \n ";
         await ReplyAsync(helpMessage);
     }
@@ -346,7 +347,7 @@ public class Commands : ModuleBase
     {
         using (HttpClient client = new HttpClient())
         {
-            string apiUrl = "https://v2.jokeapi.dev/joke/Any";
+            string apiUrl = "https://v2.jokeapi.dev/joke/Any?type=twopart";
             HttpResponseMessage response = await client.GetAsync(apiUrl);
 
             if (response.IsSuccessStatusCode)
@@ -499,8 +500,48 @@ public class Commands : ModuleBase
                 await ReplyAsync("Sorry, I couldn't fetch a cat image at the moment. Please try again later.");
             }
         }
-
     }
+    // Neko command
+    [Command("neko")]
+    public async Task Neko()
+    {
+        try
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string apiUrl = "https://nekos.life/api/v2/img/neko";
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string nekoJson = await response.Content.ReadAsStringAsync();
+                    JObject nekoObject = JObject.Parse(nekoJson);
+
+                    string imageUrl = nekoObject["url"]?.ToString();
+
+                    if (!string.IsNullOrEmpty(imageUrl))
+                    {
+                        await ReplyAsync(imageUrl);
+                    }
+                    else
+                    {
+                        await ReplyAsync("Sorry, I couldn't fetch a neko at the moment. Please try again later.");
+                    }
+                }
+                else
+                {
+                    await ReplyAsync("Sorry, I couldn't fetch a neko at the moment. Please try again later.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in Neko command: {ex.Message}");
+            await ReplyAsync("An error occurred while fetching the neko. Please try again later.");
+        }
+    }
+    // End of neko command
+
     // The End of the API commands.
     // Misc Commands:
     // Give the credits of the bot
@@ -514,7 +555,7 @@ public class Commands : ModuleBase
     public async Task changelog()
     {
         await ReplyAsync(
-            "# Changelog: \n ### API UPDATE 0.0.3 \n The bot is now open source! \n 2 new nsfw commands! (?nsfw-help)");
+            "# Changelog: \n ### Neko! 0.0.4 \n New command! ?neko!)");
     }
     // Simple source command that leads to this project source
     [Command("source")]
