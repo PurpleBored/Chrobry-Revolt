@@ -1,10 +1,12 @@
-﻿using Optionals;
+﻿using System.Diagnostics;
+using Optionals;
 using RevoltSharp.Commands;
 using RevoltSharp;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using Microsoft.Extensions.Configuration;
+
 class Program
 {
     public static RevoltClient Client;
@@ -14,7 +16,7 @@ class Program
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("config.json")
             .Build();
-
+        
         string token = Configuration["RevoltConfig:Token"];
         string apiUrl = Configuration["RevoltConfig:ApiUrl"];
 
@@ -24,7 +26,7 @@ class Program
         });
 
         await Client.StartAsync();
-        await Client.CurrentUser.ModifySelfAsync(statusText: new Option<string>("Now Open source! `?source`"));
+        await Client.CurrentUser.ModifySelfAsync(statusText: new Option<string>("Always Evolving!"));
         await Client.CurrentUser.ModifySelfAsync(statusType: new Option<UserStatusType>(UserStatusType.Focus));
         CommandHandler CommandHandler = new CommandHandler(Client);
         CommandHandler.LoadCommands();
@@ -77,11 +79,11 @@ public class CommandHandler
                 context.Channel.SendMessageAsync("Error: " + result.ErrorReason);
             }
         }
-
-
+// Only god and the dude behing RevoltSharp know what's going on here.
 }
 public class Commands : ModuleBase
 {
+    
     // Help commands:
     // Basic Help Command.
     [Command("help")]
@@ -94,13 +96,12 @@ public class Commands : ModuleBase
                           "`?credits` - Displays bot's credit.\n" +
                           "`?test` - Simple test command you say test bot will response.\n" +
                           "`?invite` - Send a link to invite this bot to your server! \n" +
-                          "`?changelog` - very simple command gives a list of changes and new additions! \n" +
                           "`?calculate` {num} {+, - , / , * } {num} - A very simple calculator. \n" +
                           "`?mod-help` - Displays a list of available mod commands. \n " +
+                          "`?ping` - tests the bot ping. \n" +
                           "`?nsfw-help` - Sends a list of all aviable nsfw commands. \n " +
                           "### Fun Commands: \n" +
-                          "`?roll` - Rolls a random number between 1 and 6.\n" +
-                          "`?hi` - just says hi to the user. \n" +
+                          "`?dice` - Rolls a random number between 1 and 6.\n" +
                           "`?say` - says what the user told it to say!. \n" +
                           "`?dm` - Just DMs the user Hi :3. \n" +
                           "`?rps {paper,rock,scissors}` - Simple Rock paper scissors game.\n" +
@@ -110,11 +111,13 @@ public class Commands : ModuleBase
                           "`?flipcoin` - a Command so easy a child could do it. \n " +
                           "`?fact` - Gives a random useless fact. \n " +
                           "`?urban + {word}` - uses the urban dictionary the search for the word. \n" +
-                          "`?shitpost` - Sends a random shitpost. \n " +
+                          "`?shitpost` - Sends a random shitpost. (The shitpost API is broken.) \n " +
                           "`?cat` - Cat :3 \n " +
                           "`?neko` - Neko command \n " +
                           "`?advice` - Gives the user a life Advice \n " +
-                          "`?quote` - Gives a random quote using yet another API. \n ";
+                          "`?quote` - Gives a random quote using yet another API. \n " +
+                          "`?gif {term}` - Allows the user to search for gifs using giphy (Beta) \n" +
+                          "`?avatar` - Sends the user Avatar (Beta) \n ";
         await ReplyAsync(helpMessage);
     }
 
@@ -135,20 +138,6 @@ public class Commands : ModuleBase
     // End of the help command Section
     
     // Dm Commands (commands that dm the user in some way.):
-    // Very simple DM command
-    [Command("dm")]
-    public async Task DM()
-    {
-        DMChannel DM = await Context.User.GetDMChannelAsync();
-        if (DM == null)
-        {
-            await ReplyAsync("Could not open a DM :(");
-            return;
-        }
-
-        await DM.SendMessageAsync("Hi :)");
-    }
-
     // Invite Command - Sends a invite in the DM
     [Command("invite")]
     public async Task Invite()
@@ -167,13 +156,6 @@ public class Commands : ModuleBase
                                   "https://nightly.haydar.dev/bot/01HA55V3K8B26T87TBKMZMWRKJ \n" +
                                   "If you find any bugs report them to the bots creator. thank you bai");
     }
-    
-    // Simple Hi command DMs the user Hi
-    [Command("hi")]
-    public async Task Hi()
-    {
-        await ReplyAsync("Hi " + Context.User.Username);
-    }
     // End of DM commands.
     
     // Debug commands.
@@ -184,9 +166,62 @@ public class Commands : ModuleBase
     {
         await ReplyAsync("Ig it works :tm:");
     }
+    // Ping command.
+    [Command("ping")]
+    public async Task PingCommand()
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
 
+        await ReplyAsync("Ping...");
+
+        stopwatch.Stop();
+        var latency = stopwatch.ElapsedMilliseconds;
+
+        await ReplyAsync($"Pong! (Latency: {latency}ms)");
+    }
+    // End of the Debug commands.
+    
     // Fun commands:
+    // Gif command
+    [Command("gif")]
+    public async Task GifCommand([Remainder] string keyword)
+    {
+        using (HttpClient client = new HttpClient())
+        {
+            IConfiguration Configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("giphy.json")
+                .Build();
 
+            string apiKey = Configuration["GiphyApiKey"];
+            string apiUrl = $"https://api.giphy.com/v1/gifs/search?api_key={apiKey}&q={keyword}&limit=1";
+        
+            HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string gifJson = await response.Content.ReadAsStringAsync();
+                JObject gifObject = JObject.Parse(gifJson);
+
+                string gifUrl = gifObject["data"][0]["images"]["original"]["url"]?.ToString();
+
+                if (!string.IsNullOrEmpty(gifUrl))
+                {
+                    await Context.Channel.SendMessageAsync(gifUrl);
+                }
+                else
+                {
+                    await Context.Channel.SendMessageAsync("Sorry, I couldn't find a GIF for that keyword.");
+                }
+            }
+            else
+            {
+                await Context.Channel.SendMessageAsync("Sorry, I couldn't fetch a GIF at the moment. Please try again later.");
+            }
+        }
+    }
+    
     // A Rock paper Scicors command.
     [Command("rps")]
     public async Task Rps([Remainder] string userChoice = null)
@@ -227,8 +262,8 @@ public class Commands : ModuleBase
     }
 
     // Roll command roles a random number between 1 - 6 (Perfect for bets :troll")
-    [Command("roll")]
-    public async Task Roll()
+    [Command("dice")]
+    public async Task dice()
     {
         var random = new Random();
         var result = random.Next(1, 7);
@@ -309,7 +344,8 @@ public class Commands : ModuleBase
                 await ReplyAsync("Sorry, I couldn't fetch advice at the moment. Please try again later.");
             }
         }
-    }    // Dog fact command very simple very fun
+    }
+    // Dog fact command very simple very fun
     [Command("dogfact")]
     public async Task DogFact()
     {
@@ -581,18 +617,15 @@ public class Commands : ModuleBase
     {
         await ReplyAsync("This bot is made using revoltsharp by Purplebored known as Kniaż Jarema on nightly");
     }
+    
+    // Avatar command
+    [Command("avatar")]
+    public async Task AvatarCommand()
+    {
+        var user = Context.Message.Author.GetAvatarUrl();
+        var avatarUrl = $"{user}";
 
-    [Command("changelog")]
-    public async Task changelog()
-    {
-        await ReplyAsync(
-            "# Changelog: \n ### Neko! 0.0.4 \n New command! ?neko!)");
-    }
-    // Simple source command that leads to this project source
-    [Command("source")]
-    public async Task source()
-    {
-        await ReplyAsync("If you want to contribute or check out the source code you can do it here: https://codeberg.org/Purplebored/Chrobry");
+        await Context.Channel.SendMessageAsync($"Your avatar: {avatarUrl}");
     }
     // End of the misc commands
 
