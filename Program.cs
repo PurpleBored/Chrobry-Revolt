@@ -26,7 +26,7 @@ class Program
         });
 
         await Client.StartAsync();
-        await Client.CurrentUser.ModifySelfAsync(statusText: new Option<string>("Always Evolving!"));
+        await Client.CurrentUser.ModifySelfAsync(statusText: new Option<string>("God please someone kill me."));
         await Client.CurrentUser.ModifySelfAsync(statusType: new Option<UserStatusType>(UserStatusType.Focus));
         CommandHandler CommandHandler = new CommandHandler(Client);
         CommandHandler.LoadCommands();
@@ -79,18 +79,18 @@ public class CommandHandler
                 context.Channel.SendMessageAsync("Error: " + result.ErrorReason);
             }
         }
-// Only god and the dude behing RevoltSharp know what's going on here.
+// Only god and the dude behind RevoltSharp know what's going on here.
 }
 public class Commands : ModuleBase
 {
-    
+
     // Help commands:
     // Basic Help Command.
     [Command("help")]
     public async Task Help()
     {
-        var helpMessage = "### List of available commands:\n\n" +
-                          "### Practical Commands: \n" +
+        var helpMessage = "#### List of available commands:\n\n" +
+                          "#### Practical Commands: \n" +
                           "`?help` - Displays this command.\n" +
                           "`?source` - Links to the bots source code. \n" +
                           "`?credits` - Displays bot's credit.\n" +
@@ -100,7 +100,7 @@ public class Commands : ModuleBase
                           "`?mod-help` - Displays a list of available mod commands. \n " +
                           "`?ping` - tests the bot ping. \n" +
                           "`?nsfw-help` - Sends a list of all aviable nsfw commands. \n " +
-                          "### Fun Commands: \n" +
+                          "#### Fun Commands: \n" +
                           "`?dice` - Rolls a random number between 1 and 6.\n" +
                           "`?say` - says what the user told it to say!. \n" +
                           "`?dm` - Just DMs the user Hi :3. \n" +
@@ -136,7 +136,7 @@ public class Commands : ModuleBase
         await ReplyAsync("### Here are all the available NSFW commands: \n `?r34 {search}` - Searches rule34.xxx \n `?hentai` - Grabs a random hentai image \n ");
     }
     // End of the help command Section
-    
+
     // Dm Commands (commands that dm the user in some way.):
     // Invite Command - Sends a invite in the DM
     [Command("invite")]
@@ -154,12 +154,78 @@ public class Commands : ModuleBase
                                   "https://app.haydar.dev/bot/01HA55V3K8B26T87TBKMZMWRKJ \n" +
                                   "but if you on nightly.haydar.dev use this link \n" +
                                   "https://nightly.haydar.dev/bot/01HA55V3K8B26T87TBKMZMWRKJ \n" +
-                                  "If you find any bugs report them to the bots creator. thank you bai");
+                                  "If you find any bugs report them to the bots creator. Thank you bye!");
     }
+    [Command("debug")]
+    public async Task Debug()
+    {
+        DMChannel DM = await Context.User.GetDMChannelAsync();
+        if (DM == null)
+        {
+            await ReplyAsync("Your code is so messed up that even DMs are broken :skull: wow");
+            return;
+        }
+        try
+        {
+            // Send initial message
+            await DM.SendMessageAsync("DMs work if you received this message.");
+            await DM.SendMessageAsync("-----");
+            await DM.SendMessageAsync("You should recive the ping of the bot and a shitpost");
+            // Ping part
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            await DM.SendMessageAsync("-----");
+            stopwatch.Stop();
+            var latency = stopwatch.ElapsedMilliseconds;
+            await DM.SendMessageAsync($"The ping is: {latency}ms");
+            await DM.SendMessageAsync("-----");
+            // Shitpost part
+            await SendRandomMeme(DM);
+            await DM.SendMessageAsync("If you saw a Shitpost and the ping of the bot everything should work correctly.");
+        }
+        catch (Exception ex)
+        {
+
+            await DM.SendMessageAsync($"An error occurred: {ex.Message}");
+        }
+    }
+    // Shitpost Logic
+    private async Task SendRandomMeme(DMChannel DM)
+    {
+        const string apiUrl = "https://api.thedailyshitpost.net/random";
+
+        using (HttpClient client = new HttpClient())
+        {
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string memeJson = await response.Content.ReadAsStringAsync();
+                    dynamic memeObject = Newtonsoft.Json.JsonConvert.DeserializeObject(memeJson);
+
+                    string title = memeObject.title;
+                    string imageUrl = memeObject.url;
+
+                    await DM.SendMessageAsync($"{imageUrl}");
+                }
+                else
+                {
+                    await DM.SendMessageAsync("Sorry, The Shitpost API is having issues again.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DM.SendMessageAsync($"An error occurred while fetching a meme: {ex.Message}");
+            }
+        }
+    }
+    // End of the Debug command.
     // End of DM commands.
-    
+
     // Debug commands.
-    
+
     // Very Simple test Command
     [Command("test")]
     public async Task Test()
@@ -181,7 +247,7 @@ public class Commands : ModuleBase
         await ReplyAsync($"Pong! (Latency: {latency}ms)");
     }
     // End of the Debug commands.
-    
+
     // Fun commands:
     // Gif command
     [Command("gif")]
@@ -196,7 +262,7 @@ public class Commands : ModuleBase
 
             string apiKey = Configuration["GiphyApiKey"];
             string apiUrl = $"https://api.giphy.com/v1/gifs/search?api_key={apiKey}&q={keyword}&limit=1";
-        
+
             HttpResponseMessage response = await client.GetAsync(apiUrl);
 
             if (response.IsSuccessStatusCode)
@@ -221,7 +287,7 @@ public class Commands : ModuleBase
             }
         }
     }
-    
+
     // A Rock paper Scicors command.
     [Command("rps")]
     public async Task Rps([Remainder] string userChoice = null)
@@ -271,7 +337,7 @@ public class Commands : ModuleBase
     }
 
     // Very simple very  say command.
-        private List<string> blacklist = new List<string>
+    private List<string> blacklist = new List<string>
     {
         "nigga", "nigger", "n i g g a", "fuck", "shit", "piss", "cunt", "dick", "fag", "faggot", "kys", "ky$", // Blacklist for the say command
     };
@@ -313,7 +379,7 @@ public class Commands : ModuleBase
     }
     // End of the Fun commands.
     // Api commands
-    
+
     // Advice command.
     [Command("advice")]
     public async Task Advice()
@@ -617,7 +683,7 @@ public class Commands : ModuleBase
     {
         await ReplyAsync("This bot is made using revoltsharp by Purplebored known as Kniaż Jarema on nightly");
     }
-    
+
     // Avatar command
     [Command("avatar")]
     public async Task AvatarCommand()
@@ -789,31 +855,30 @@ public class Commands : ModuleBase
     [Command("hentai")]
     public async Task hentai()
     {
-                if (!(Context.Channel is TextChannel textChannel) || !textChannel.IsNsfw)
+        if (!(Context.Channel is TextChannel textChannel) || !textChannel.IsNsfw)
         {
             await Context.Channel.SendMessageAsync(
                 "This command is only allowed in NSFW channels. So go to a NSFW channel to get your NSFW smh");
             return;
         }
         using (HttpClient client = new HttpClient())
-    {
-        string apiUrl = "https://nekobot.xyz/api/image?type=hneko";
-        HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-        if (response.IsSuccessStatusCode)
         {
-            string nekoJson = await response.Content.ReadAsStringAsync();
-            dynamic nekoObject = Newtonsoft.Json.JsonConvert.DeserializeObject(nekoJson);
+            string apiUrl = "https://nekobot.xyz/api/image?type=hneko";
+            HttpResponseMessage response = await client.GetAsync(apiUrl);
 
-            string imageUrl = nekoObject["message"];
+            if (response.IsSuccessStatusCode)
+            {
+                string nekoJson = await response.Content.ReadAsStringAsync();
+                dynamic nekoObject = Newtonsoft.Json.JsonConvert.DeserializeObject(nekoJson);
 
-            await ReplyAsync(imageUrl);
-        }
-        else
-        {
-            await ReplyAsync("Sorry, I couldn't fetch a neko image at the moment. Please try again later.");
+                string imageUrl = nekoObject["message"];
+
+                await ReplyAsync(imageUrl);
+            }
+            else
+            {
+                await ReplyAsync("Sorry, I couldn't fetch a neko image at the moment. Please try again later.");
+            }
         }
     }
-    }
-
 }
