@@ -35,7 +35,7 @@ class Program
 
         // Modify user status
         await Client.CurrentUser.ModifySelfAsync(
-            statusText: new Option<string>("God please someone kill me."),
+            statusText: new Option<string>("?help."),
             statusType: new Option<UserStatusType>(UserStatusType.Focus)
         );
 
@@ -110,7 +110,6 @@ public class Commands : ModuleBase
             "#### List of available commands:\n\n" +
             "#### Practical Commands: \n" +
             "`?help` - Displays this command.\n" +
-            "`?source` - Links to the bots source code. \n" +
             "`?credits` - Displays bot's credit.\n" +
             "`?test` - Simple test command you say test bot will response.\n" +
             "`?invite` - Send a link to invite this bot to your server! \n" +
@@ -126,7 +125,7 @@ public class Commands : ModuleBase
             "`?dogfact` - Gives a random dogfact using the Dogfact API!. \n" +
             "`?catfact` - Gives a random Catfact using cat fact API (Currently somewhat bugged with the []). \n" +
             "`?joke` - Very simple command just gives a joke using the Joke API. \n " +
-            "`?flipcoin` - a Command so easy a child could do it. \n " +
+            "`?coinflip` - a Command so easy a child could do it. \n " +
             "`?fact` - Gives a random useless fact. \n " +
             "`?urban + {word}` - uses the urban dictionary to search for the word. \n" +
             "`?shitpost` - Sends a random shitpost. (The shitpost API is broken.) \n " +
@@ -381,6 +380,34 @@ public class Commands : ModuleBase
         await ReplyAsync($"You rolled a {result}!");
     }
     // End of the Dice command
+
+    // Pick Command
+    [Command("roll")]
+    public async Task Roll([Remainder] string randnum = null)
+    {
+        if (randnum == null)
+        {
+            await ReplyAsync("Please specify a number to roll");
+        }
+        else if (int.TryParse(randnum, out int maxNumber) && maxNumber > 0)
+        {
+            try
+            {
+                var random = new Random();
+                var result = random.Next(1, maxNumber + 1);
+                await ReplyAsync($"You rolled a {result}!");
+            }
+            catch (Exception ex)
+            {
+                await ReplyAsync("An error occurred while rolling the dice.");
+            }
+        }
+        else
+        {
+            await ReplyAsync("Please pick a valid number.");
+        }
+    }
+    // End of the pick command
 
     // Very simple say command.
     private List<string> blacklist = new List<string>
