@@ -134,6 +134,7 @@ public class Commands : ModuleBase
             "`?advice` - Gives the user a life Advice \n " +
             "`?quote` - Gives a random quote using yet another API. \n " +
             "`?gif {term}` - Allows the user to search for gifs using giphy (Beta) \n" +
+            "`?pun` - Gives user a simple pun. \n" +
             "`?avatar` - Sends the user Avatar (Beta) \n ";
         await ReplyAsync(helpMessage);
     }
@@ -147,7 +148,8 @@ public class Commands : ModuleBase
             "## List Of Available mod commands. \n" +
             "`?kick {Mention}` - Kicks the user \n" +
             "`?ban {mentions}` - Bans the User \n" +
-            "`?unban {mention}` - Unbans the user. \n";
+            "`?unban {mention}` - Unbans the user. \n" +
+            "### I am Currently working on adding more usefull command so be patient! \n";
 
         await ReplyAsync(helpMessage);
     }
@@ -548,9 +550,9 @@ public class Commands : ModuleBase
                     string factJson = await response.Content.ReadAsStringAsync();
                     JObject factObject = JObject.Parse(factJson);
 
-                    if (factObject["data"] != null)
+                    if (factObject["data"] is JArray dataArray && dataArray.Count > 0)
                     {
-                        string fact = factObject["data"].ToString();
+                        string fact = dataArray[0].ToString();
                         await ReplyAsync(fact);
                     }
                     else
@@ -569,7 +571,49 @@ public class Commands : ModuleBase
             }
         }
     }
+
     // End of the Cat fact command
+
+    // Pun command
+    [Command("pun")]
+    public async Task Pun()
+    {
+        using (HttpClient client = new HttpClient())
+        {
+            try
+            {
+                string apiUrl = "https://v2.jokeapi.dev/joke/Pun";
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string jokeJson = await response.Content.ReadAsStringAsync();
+                    JObject jokeObject = JObject.Parse(jokeJson);
+
+                    string setup = jokeObject["setup"]?.ToString();
+                    string punchline = jokeObject["delivery"]?.ToString();
+
+                    if (!string.IsNullOrEmpty(setup) && !string.IsNullOrEmpty(punchline))
+                    {
+                        await ReplyAsync($"**{setup}**\n*{punchline}*");
+                    }
+                    else
+                    {
+                        await ReplyAsync("Sorry, I couldn't fetch a pun at the moment. Please try again later.");
+                    }
+                }
+                else
+                {
+                    await ReplyAsync("Sorry, I couldn't fetch a pun at the moment. Please try again later.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await ReplyAsync($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+    // End of the Pun command
 
     // Joke command
     [Command("joke")]
@@ -910,6 +954,7 @@ public class Commands : ModuleBase
     }
 
     private RevoltClient Client;
+    // End of styff nedded to make those command work.
 
     // Stats command
     [Command("stats")]
@@ -928,6 +973,7 @@ public class Commands : ModuleBase
             await ReplyAsync($"An error occurred: {ex.Message}");
         }
     }
+    // End of the stats command
 
     // Ban Command
     [Command("ban")]
@@ -944,6 +990,7 @@ public class Commands : ModuleBase
             await ReplyAsync("### ERROR\nInvalid Mention or Bot Permissions.");
         }
     }
+    // End of the Ban command
 
     // Unban Command
     [Command("unban")]
@@ -960,6 +1007,7 @@ public class Commands : ModuleBase
             await ReplyAsync("### ERROR\nInvalid Mention or Bot Permissions.");
         }
     }
+    // End of the UnBan command
 
     // Kick Command
     [Command("kick")]
@@ -976,6 +1024,7 @@ public class Commands : ModuleBase
             await ReplyAsync("### ERROR\nInvalid Mention or Bot Permissions.");
         }
     }
+    // End of the Kick command
 
     // End of mod commands
 
