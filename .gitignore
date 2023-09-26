@@ -1,6 +1,4 @@
-.env
-bot.lua
-deps
-lit.exe
-luvi.exe
-luvit.exe
+obj
+bin
+.vs
+.idea
