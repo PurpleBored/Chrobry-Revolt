@@ -147,7 +147,11 @@ public class Commands : ModuleBase
     public async Task Video()
     {
         var video = "Here is a list of all aviable videos! \n" +
-        "`?ihnk` - Send a I have no knwoledge about any of this video. \n";
+        "`?ihnk` - Sends a I have no knwoledge about any of this video. \n" +
+        //"`?s` - Sends . \n" +
+        //"`?s` - Sends . \n" +
+        //"`?s` - Sends . \n" +
+        "`?scary` - Sends the oh oh scary oh oh shiver me timbers video \n";
         await ReplyAsync(video);
     }
     // End of Video command
@@ -1158,6 +1162,14 @@ public class Commands : ModuleBase
         await ReplyAsync("https://cdn.purplebored.pl/uploads/y2mate.com%20-%20I%20have%20no%20knowledge%20of%20any%20of%20this%20ThIs%20iS%20sO%20bIzZaRe_480p.mp4");
     }
     // end of ihnk
+
+    // Begning of scary
+    [Command("Scary")]
+    public async Task Scary()
+    {
+        await ReplyAsync("https://cdn.purplebored.pl/uploads/y2mate.com%20-%20oh%20oh%20scary%20oh%20oh%20shiver%20me%20timbers_360p.mp4");
+    }
+    // End of scary
 
     // End of the Bot
 }
