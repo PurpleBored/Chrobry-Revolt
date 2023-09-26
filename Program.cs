@@ -109,6 +109,7 @@ public class Commands : ModuleBase
         var helpMessage =
             "#### List of available commands:\n\n" +
             "#### Practical Commands: \n" +
+            "`?video` - Sends a list of all aviable videos\n" +
             "`?help` - Displays this command.\n" +
             "`?credits` - Displays bot's credit.\n" +
             "`?test` - Simple test command you say test bot will response.\n" +
@@ -135,10 +136,21 @@ public class Commands : ModuleBase
             "`?quote` - Gives a random quote using yet another API. \n " +
             "`?gif {term}` - Allows the user to search for gifs using giphy (Beta) \n" +
             "`?pun` - Gives user a simple pun. \n" +
-            "`?avatar` - Sends the user Avatar (Beta) \n ";
+            "`?avatar` - Sends the user Avatar (Beta) \n " +
+            "#### This bot is far from ready so please don't be too harash on it :01H4RPMABMK4GPXH4QBKAKVJF9:";
         await ReplyAsync(helpMessage);
     }
     // End of the Help command.
+
+    // Begning of Video command
+    [Command("video")]
+    public async Task Video()
+    {
+        var video = "Here is a list of all aviable videos! \n" +
+        "`?ihnk` - Send a I have no knwoledge about any of this video. \n";
+        await ReplyAsync(video);
+    }
+    // End of Video command
 
     // Mod Help command
     [Command("mod-help")]
@@ -204,6 +216,8 @@ public class Commands : ModuleBase
 
         try
         {
+            // Sends a messege in the server
+            await ReplyAsync("You should recive DMs now.");
             // Send initial message
             await DM.SendMessageAsync("DMs work if you received this message.");
             await DM.SendMessageAsync("-----");
@@ -292,6 +306,14 @@ public class Commands : ModuleBase
     // End of the Debug commands.
 
     // Fun commands:
+
+    // L Command
+    [Command("l")]
+    public async Task LCommand()
+    {
+        await ReplyAsync("L");
+    }
+    // End of L command
 
     // Gif command
     [Command("gif")]
@@ -1081,6 +1103,14 @@ public class Commands : ModuleBase
         }
     }
 
+    // cL Command
+    [Command("cl")]
+    public async Task LTemog()
+    {
+        await ReplyAsync("Common <@01H5K1PW0B2NGGWFRGHZVBCZ0S> L");
+    }
+    // End of cL command
+
     // Hentai command.
     [Command("hentai")]
     public async Task Hentai()
@@ -1118,5 +1148,16 @@ public class Commands : ModuleBase
         }
     }
     // End of NSFW commands
+
+    // Begning of Videos and gif commands!
+
+    // I have no knowlege
+    [Command("ihnk")]
+    public async Task IHave()
+    {
+        await ReplyAsync("https://cdn.purplebored.pl/uploads/y2mate.com%20-%20I%20have%20no%20knowledge%20of%20any%20of%20this%20ThIs%20iS%20sO%20bIzZaRe_480p.mp4");
+    }
+    // end of ihnk
+
     // End of the Bot
 }
