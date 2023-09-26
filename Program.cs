@@ -109,10 +109,6 @@ public class Commands : ModuleBase
         var helpMessage =
             "#### List of available commands:\n\n" +
             "#### Practical Commands: \n" +
-<<<<<<< HEAD
-            "`?video` - Sends a list of all aviable videos\n" +
-=======
->>>>>>> parent of f796c56 (Big Update)
             "`?help` - Displays this command.\n" +
             "`?credits` - Displays bot's credit.\n" +
             "`?test` - Simple test command you say test bot will response.\n" +
@@ -138,34 +134,11 @@ public class Commands : ModuleBase
             "`?advice` - Gives the user a life Advice \n " +
             "`?quote` - Gives a random quote using yet another API. \n " +
             "`?gif {term}` - Allows the user to search for gifs using giphy (Beta) \n" +
-<<<<<<< HEAD
-            "`?pun` - Gives user a simple pun. \n" +
-            "`?avatar` - Sends the user Avatar (Beta) \n " +
-            "#### This bot is far from ready so please don't be too harash on it :01H4RPMABMK4GPXH4QBKAKVJF9:";
-=======
             "`?avatar` - Sends the user Avatar (Beta) \n ";
->>>>>>> parent of f796c56 (Big Update)
         await ReplyAsync(helpMessage);
     }
     // End of the Help command.
 
-<<<<<<< HEAD
-    // Begning of Video command
-    [Command("video")]
-    public async Task Video()
-    {
-        var video = "Here is a list of all aviable videos! \n" +
-        "`?ihnk` - Sends a I have no knwoledge about any of this video. \n" +
-        //"`?s` - Sends . \n" +
-        //"`?s` - Sends . \n" +
-        //"`?s` - Sends . \n" +
-        "`?scary` - Sends the oh oh scary oh oh shiver me timbers video \n";
-        await ReplyAsync(video);
-    }
-    // End of Video command
-
-=======
->>>>>>> parent of f796c56 (Big Update)
     // Mod Help command
     [Command("mod-help")]
     public async Task ModHelp()
@@ -174,12 +147,7 @@ public class Commands : ModuleBase
             "## List Of Available mod commands. \n" +
             "`?kick {Mention}` - Kicks the user \n" +
             "`?ban {mentions}` - Bans the User \n" +
-<<<<<<< HEAD
-            "`?unban {mention}` - Unbans the user. \n" +
-            "### I am Currently working on adding more usefull command so be patient! \n";
-=======
             "`?unban {mention}` - Unbans the user. \n";
->>>>>>> parent of f796c56 (Big Update)
 
         await ReplyAsync(helpMessage);
     }
@@ -234,11 +202,6 @@ public class Commands : ModuleBase
 
         try
         {
-<<<<<<< HEAD
-            // Sends a messege in the server
-            await ReplyAsync("You should recive DMs now.");
-=======
->>>>>>> parent of f796c56 (Big Update)
             // Send initial message
             await DM.SendMessageAsync("DMs work if you received this message.");
             await DM.SendMessageAsync("-----");
@@ -328,17 +291,6 @@ public class Commands : ModuleBase
 
     // Fun commands:
 
-<<<<<<< HEAD
-    // L Command
-    [Command("l")]
-    public async Task LCommand()
-    {
-        await ReplyAsync("L");
-    }
-    // End of L command
-
-=======
->>>>>>> parent of f796c56 (Big Update)
     // Gif command
     [Command("gif")]
     public async Task GifCommand([Remainder] string keyword)
@@ -596,15 +548,9 @@ public class Commands : ModuleBase
                     string factJson = await response.Content.ReadAsStringAsync();
                     JObject factObject = JObject.Parse(factJson);
 
-<<<<<<< HEAD
-                    if (factObject["data"] is JArray dataArray && dataArray.Count > 0)
-                    {
-                        string fact = dataArray[0].ToString();
-=======
                     if (factObject["data"] != null)
                     {
                         string fact = factObject["data"].ToString();
->>>>>>> parent of f796c56 (Big Update)
                         await ReplyAsync(fact);
                     }
                     else
@@ -623,55 +569,8 @@ public class Commands : ModuleBase
             }
         }
     }
-<<<<<<< HEAD
-
     // End of the Cat fact command
 
-    // Pun command
-    [Command("pun")]
-    public async Task Pun()
-    {
-        using (HttpClient client = new HttpClient())
-        {
-            try
-            {
-                string apiUrl = "https://v2.jokeapi.dev/joke/Pun";
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string jokeJson = await response.Content.ReadAsStringAsync();
-                    JObject jokeObject = JObject.Parse(jokeJson);
-
-                    string setup = jokeObject["setup"]?.ToString();
-                    string punchline = jokeObject["delivery"]?.ToString();
-
-                    if (!string.IsNullOrEmpty(setup) && !string.IsNullOrEmpty(punchline))
-                    {
-                        await ReplyAsync($"**{setup}**\n*{punchline}*");
-                    }
-                    else
-                    {
-                        await ReplyAsync("Sorry, I couldn't fetch a pun at the moment. Please try again later.");
-                    }
-                }
-                else
-                {
-                    await ReplyAsync("Sorry, I couldn't fetch a pun at the moment. Please try again later.");
-                }
-            }
-            catch (Exception ex)
-            {
-                await ReplyAsync($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-    // End of the Pun command
-
-=======
-    // End of the Cat fact command
-
->>>>>>> parent of f796c56 (Big Update)
     // Joke command
     [Command("joke")]
     public async Task Joke()
@@ -1011,10 +910,6 @@ public class Commands : ModuleBase
     }
 
     private RevoltClient Client;
-<<<<<<< HEAD
-    // End of styff nedded to make those command work.
-=======
->>>>>>> parent of f796c56 (Big Update)
 
     // Stats command
     [Command("stats")]
@@ -1033,10 +928,6 @@ public class Commands : ModuleBase
             await ReplyAsync($"An error occurred: {ex.Message}");
         }
     }
-<<<<<<< HEAD
-    // End of the stats command
-=======
->>>>>>> parent of f796c56 (Big Update)
 
     // Ban Command
     [Command("ban")]
@@ -1053,10 +944,6 @@ public class Commands : ModuleBase
             await ReplyAsync("### ERROR\nInvalid Mention or Bot Permissions.");
         }
     }
-<<<<<<< HEAD
-    // End of the Ban command
-=======
->>>>>>> parent of f796c56 (Big Update)
 
     // Unban Command
     [Command("unban")]
@@ -1073,10 +960,6 @@ public class Commands : ModuleBase
             await ReplyAsync("### ERROR\nInvalid Mention or Bot Permissions.");
         }
     }
-<<<<<<< HEAD
-    // End of the UnBan command
-=======
->>>>>>> parent of f796c56 (Big Update)
 
     // Kick Command
     [Command("kick")]
@@ -1093,10 +976,6 @@ public class Commands : ModuleBase
             await ReplyAsync("### ERROR\nInvalid Mention or Bot Permissions.");
         }
     }
-<<<<<<< HEAD
-    // End of the Kick command
-=======
->>>>>>> parent of f796c56 (Big Update)
 
     // End of mod commands
 
@@ -1153,17 +1032,6 @@ public class Commands : ModuleBase
         }
     }
 
-<<<<<<< HEAD
-    // cL Command
-    [Command("cl")]
-    public async Task LTemog()
-    {
-        await ReplyAsync("Common <@01H5K1PW0B2NGGWFRGHZVBCZ0S> L");
-    }
-    // End of cL command
-
-=======
->>>>>>> parent of f796c56 (Big Update)
     // Hentai command.
     [Command("hentai")]
     public async Task Hentai()
@@ -1201,27 +1069,5 @@ public class Commands : ModuleBase
         }
     }
     // End of NSFW commands
-<<<<<<< HEAD
-
-    // Begning of Videos and gif commands!
-
-    // I have no knowlege
-    [Command("ihnk")]
-    public async Task IHave()
-    {
-        await ReplyAsync("https://cdn.purplebored.pl/uploads/y2mate.com%20-%20I%20have%20no%20knowledge%20of%20any%20of%20this%20ThIs%20iS%20sO%20bIzZaRe_480p.mp4");
-    }
-    // end of ihnk
-
-    // Begning of scary
-    [Command("Scary")]
-    public async Task Scary()
-    {
-        await ReplyAsync("https://cdn.purplebored.pl/uploads/y2mate.com%20-%20oh%20oh%20scary%20oh%20oh%20shiver%20me%20timbers_360p.mp4");
-    }
-    // End of scary
-
-=======
->>>>>>> parent of f796c56 (Big Update)
     // End of the Bot
 }
