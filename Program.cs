@@ -109,7 +109,10 @@ public class Commands : ModuleBase
         var helpMessage =
             "#### List of available commands:\n\n" +
             "#### Practical Commands: \n" +
+<<<<<<< HEAD
             "`?video` - Sends a list of all aviable videos\n" +
+=======
+>>>>>>> parent of f796c56 (Big Update)
             "`?help` - Displays this command.\n" +
             "`?credits` - Displays bot's credit.\n" +
             "`?test` - Simple test command you say test bot will response.\n" +
@@ -135,13 +138,18 @@ public class Commands : ModuleBase
             "`?advice` - Gives the user a life Advice \n " +
             "`?quote` - Gives a random quote using yet another API. \n " +
             "`?gif {term}` - Allows the user to search for gifs using giphy (Beta) \n" +
+<<<<<<< HEAD
             "`?pun` - Gives user a simple pun. \n" +
             "`?avatar` - Sends the user Avatar (Beta) \n " +
             "#### This bot is far from ready so please don't be too harash on it :01H4RPMABMK4GPXH4QBKAKVJF9:";
+=======
+            "`?avatar` - Sends the user Avatar (Beta) \n ";
+>>>>>>> parent of f796c56 (Big Update)
         await ReplyAsync(helpMessage);
     }
     // End of the Help command.
 
+<<<<<<< HEAD
     // Begning of Video command
     [Command("video")]
     public async Task Video()
@@ -156,6 +164,8 @@ public class Commands : ModuleBase
     }
     // End of Video command
 
+=======
+>>>>>>> parent of f796c56 (Big Update)
     // Mod Help command
     [Command("mod-help")]
     public async Task ModHelp()
@@ -164,8 +174,12 @@ public class Commands : ModuleBase
             "## List Of Available mod commands. \n" +
             "`?kick {Mention}` - Kicks the user \n" +
             "`?ban {mentions}` - Bans the User \n" +
+<<<<<<< HEAD
             "`?unban {mention}` - Unbans the user. \n" +
             "### I am Currently working on adding more usefull command so be patient! \n";
+=======
+            "`?unban {mention}` - Unbans the user. \n";
+>>>>>>> parent of f796c56 (Big Update)
 
         await ReplyAsync(helpMessage);
     }
@@ -220,8 +234,11 @@ public class Commands : ModuleBase
 
         try
         {
+<<<<<<< HEAD
             // Sends a messege in the server
             await ReplyAsync("You should recive DMs now.");
+=======
+>>>>>>> parent of f796c56 (Big Update)
             // Send initial message
             await DM.SendMessageAsync("DMs work if you received this message.");
             await DM.SendMessageAsync("-----");
@@ -311,6 +328,7 @@ public class Commands : ModuleBase
 
     // Fun commands:
 
+<<<<<<< HEAD
     // L Command
     [Command("l")]
     public async Task LCommand()
@@ -319,6 +337,8 @@ public class Commands : ModuleBase
     }
     // End of L command
 
+=======
+>>>>>>> parent of f796c56 (Big Update)
     // Gif command
     [Command("gif")]
     public async Task GifCommand([Remainder] string keyword)
@@ -576,9 +596,15 @@ public class Commands : ModuleBase
                     string factJson = await response.Content.ReadAsStringAsync();
                     JObject factObject = JObject.Parse(factJson);
 
+<<<<<<< HEAD
                     if (factObject["data"] is JArray dataArray && dataArray.Count > 0)
                     {
                         string fact = dataArray[0].ToString();
+=======
+                    if (factObject["data"] != null)
+                    {
+                        string fact = factObject["data"].ToString();
+>>>>>>> parent of f796c56 (Big Update)
                         await ReplyAsync(fact);
                     }
                     else
@@ -597,6 +623,7 @@ public class Commands : ModuleBase
             }
         }
     }
+<<<<<<< HEAD
 
     // End of the Cat fact command
 
@@ -641,6 +668,10 @@ public class Commands : ModuleBase
     }
     // End of the Pun command
 
+=======
+    // End of the Cat fact command
+
+>>>>>>> parent of f796c56 (Big Update)
     // Joke command
     [Command("joke")]
     public async Task Joke()
@@ -980,7 +1011,10 @@ public class Commands : ModuleBase
     }
 
     private RevoltClient Client;
+<<<<<<< HEAD
     // End of styff nedded to make those command work.
+=======
+>>>>>>> parent of f796c56 (Big Update)
 
     // Stats command
     [Command("stats")]
@@ -999,7 +1033,10 @@ public class Commands : ModuleBase
             await ReplyAsync($"An error occurred: {ex.Message}");
         }
     }
+<<<<<<< HEAD
     // End of the stats command
+=======
+>>>>>>> parent of f796c56 (Big Update)
 
     // Ban Command
     [Command("ban")]
@@ -1016,7 +1053,10 @@ public class Commands : ModuleBase
             await ReplyAsync("### ERROR\nInvalid Mention or Bot Permissions.");
         }
     }
+<<<<<<< HEAD
     // End of the Ban command
+=======
+>>>>>>> parent of f796c56 (Big Update)
 
     // Unban Command
     [Command("unban")]
@@ -1033,7 +1073,10 @@ public class Commands : ModuleBase
             await ReplyAsync("### ERROR\nInvalid Mention or Bot Permissions.");
         }
     }
+<<<<<<< HEAD
     // End of the UnBan command
+=======
+>>>>>>> parent of f796c56 (Big Update)
 
     // Kick Command
     [Command("kick")]
@@ -1050,7 +1093,10 @@ public class Commands : ModuleBase
             await ReplyAsync("### ERROR\nInvalid Mention or Bot Permissions.");
         }
     }
+<<<<<<< HEAD
     // End of the Kick command
+=======
+>>>>>>> parent of f796c56 (Big Update)
 
     // End of mod commands
 
@@ -1107,6 +1153,7 @@ public class Commands : ModuleBase
         }
     }
 
+<<<<<<< HEAD
     // cL Command
     [Command("cl")]
     public async Task LTemog()
@@ -1115,6 +1162,8 @@ public class Commands : ModuleBase
     }
     // End of cL command
 
+=======
+>>>>>>> parent of f796c56 (Big Update)
     // Hentai command.
     [Command("hentai")]
     public async Task Hentai()
@@ -1152,6 +1201,7 @@ public class Commands : ModuleBase
         }
     }
     // End of NSFW commands
+<<<<<<< HEAD
 
     // Begning of Videos and gif commands!
 
@@ -1171,5 +1221,7 @@ public class Commands : ModuleBase
     }
     // End of scary
 
+=======
+>>>>>>> parent of f796c56 (Big Update)
     // End of the Bot
 }
