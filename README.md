@@ -1,5 +1,5 @@
 # Chrobry
-
+# This repo is no longer maintained
 A king among revolt bots 👑
 
 ![Chrobry(1).png](Assets/Chrobry(1).png)

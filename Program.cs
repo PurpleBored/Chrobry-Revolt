@@ -6,6 +6,9 @@ using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using Microsoft.Extensions.Configuration;
+using System.Text;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 class Program
 {
@@ -1171,5 +1174,64 @@ public class Commands : ModuleBase
     }
     // End of scary
 
+    // AI commands.
+
+    // Begning of GPT Command.
+    // Assuming you have a dictionary to store conversation history
+    Dictionary<string, List<object>> userConversations = new Dictionary<string, List<object>>();
+
+    [Command("gpt")]
+    public async Task GPT([Remainder] string input)
+    {
+        string apiKey = "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"; // Replace with your ChatGPT API key
+        string apiUrl = "https://api.openai.com/v1/chat/completions";
+
+        HttpClient client = new HttpClient();
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+
+        string userId = Guid.NewGuid().ToString();
+
+        if (!userConversations.ContainsKey(userId))
+        {
+            userConversations[userId] = new List<object>
+        {
+            new
+            {
+                role = "system",
+                content = "You are a doomer you dont really care and your responses are small and staright to the point."
+            }
+        };
+        }
+
+        userConversations[userId].Add(new
+        {
+            role = "user",
+            content = input
+        });
+
+        HttpResponseMessage response = await client.PostAsync(apiUrl, new StringContent(JsonConvert.SerializeObject(new
+        {
+            model = "gpt-3.5-turbo",
+            messages = userConversations[userId],
+        }), Encoding.UTF8, "application/json"));
+
+        if (response.IsSuccessStatusCode)
+        {
+            string responseBody = await response.Content.ReadAsStringAsync();
+            dynamic result = JsonConvert.DeserializeObject(responseBody);
+
+            string botReply = result.choices[0].message.content;
+
+            await ReplyAsync(botReply);
+        }
+        else
+        {
+            await ReplyAsync("Error: Unable to generate response.");
+        }
+    }
+    // End of GPT command.
+
+
+    // End of AI commands.
     // End of the Bot
 }
