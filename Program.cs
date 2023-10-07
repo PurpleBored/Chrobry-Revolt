@@ -1,14 +1,13 @@
-﻿using System.Diagnostics;
-using Optionals;
-using RevoltSharp.Commands;
-using RevoltSharp;
-using System.Reflection;
-using Newtonsoft.Json.Linq;
-using System.Globalization;
-using Microsoft.Extensions.Configuration;
-using System.Text;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using Optionals;
+using RevoltSharp;
+using RevoltSharp.Commands;
+using System.Diagnostics;
+using System.Globalization;
+using System.Reflection;
+using System.Text;
 
 class Program
 {
@@ -178,7 +177,7 @@ public class Commands : ModuleBase
     [Command("nsfw-help")]
     public async Task nsfwhelp()
     {
-        await ReplyAsync("### Here are all the available NSFW commands: \n `?r34 {search}` - Searches rule34.xxx \n `?hentai` - Grabs a random hentai image \n ");
+        await ReplyAsync("### Here are all the available NSFW commands: \n `?r34 {search}` - Searches rule34.xxx \n `?hentai` - Grabs a random hentai image \n `?boobs` - Grabs a random boobs image \n `?hboobs` - Grbs a random hboobs image simple.");
     }
     // End of the NSFW-HELP command
 
@@ -1154,6 +1153,84 @@ public class Commands : ModuleBase
             await Context.Channel.SendMessageAsync($"An error occurred: {ex.Message}");
         }
     }
+    // End of Hentai command.
+
+    // Boobs command
+    [Command("boobs")]
+    public async Task Boobs()
+    {
+        try
+        {
+            if (!(Context.Channel is TextChannel textChannel) || !textChannel.IsNsfw)
+            {
+                await Context.Channel.SendMessageAsync("This command is only allowed in NSFW channels. So go to a NSFW channel to get your NSFW smh");
+                return;
+            }
+            using (HttpClient client = new HttpClient())
+            {
+                string apiUrl = "https://nekobot.xyz/api/image?type=boobs";
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string nekoJson = await response.Content.ReadAsStringAsync();
+                    dynamic nekoObject = Newtonsoft.Json.JsonConvert.DeserializeObject(nekoJson);
+
+                    string imageUrl = nekoObject["message"];
+
+                    await ReplyAsync(imageUrl);
+                }
+                else
+                {
+                    await ReplyAsync("Sorry, I couldn't fetch a neko image at the moment. Please try again later.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await Context.Channel.SendMessageAsync($"An error occurred: {ex.Message}");
+        }
+    }
+    // End of the Boobs command.
+    [Command("hboobs")]
+    public async Task Hboobs()
+    {
+        try
+        {
+            if (!(Context.Channel is TextChannel textChannel) || !textChannel.IsNsfw)
+            {
+                await Context.Channel.SendMessageAsync("This command is only allowed in NSFW channels. So go to a NSFW channel to get your NSFW smh");
+                return;
+            }
+            using (HttpClient client = new HttpClient())
+            {
+                string apiUrl = "https://nekobot.xyz/api/image?type=hboobs";
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string nekoJson = await response.Content.ReadAsStringAsync();
+                    dynamic nekoObject = Newtonsoft.Json.JsonConvert.DeserializeObject(nekoJson);
+
+                    string imageUrl = nekoObject["message"];
+
+                    await ReplyAsync(imageUrl);
+                }
+                else
+                {
+                    await ReplyAsync("Sorry, I couldn't fetch a neko image at the moment. Please try again later.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await Context.Channel.SendMessageAsync($"An error occurred: {ex.Message}");
+        }
+    }
+    // hboobs command
+
+    // End of hboobs command.
+
     // End of NSFW commands
 
     // Begning of Videos and gif commands!
@@ -1174,10 +1251,12 @@ public class Commands : ModuleBase
     }
     // End of scary
 
+    // End of Videos and gifs.
+
     // AI commands.
 
     // Begning of GPT Command.
-    // Assuming you have a dictionary to store conversation history
+    
     Dictionary<string, List<object>> userConversations = new Dictionary<string, List<object>>();
 
     [Command("gpt")]
@@ -1230,8 +1309,6 @@ public class Commands : ModuleBase
         }
     }
     // End of GPT command.
-
-
     // End of AI commands.
     // End of the Bot
 }
